@@ -32,18 +32,18 @@ def createNode(session,name, persons):
 #adds a relatioship to two existing nodes, from person1 to person2
 def addRelation(session,person1, person2, relation):
     #verifies if nodes exist, if they do ... do nothing
-    session.run("MERGE (p1:Person {surename: $person1}) RETURN p1.surename",person1 = person1)
-    session.run("MERGE (p2:Person {surename: $person2}) RETURN p2.surename",person2 = person2)
+    session.run("MERGE (p1:Person {surename: $person1})",person1 = person1)
+    session.run("MERGE (p2:Person {surename: $person2})",person2 = person2)
     #adds relation to nodes
     print(person1+" "+ person2 +" "+ relation)
-
-    session.run("MATCH(p1:Person),(p2:Person) WHERE p1.surename = $person1 AND p2.surename = $person2 CREATE (p1)-[:"+relation+"]->(p2)", person1 = person1, person2 = person2)
+    session.run("MATCH (p1:Person { surename: $person1 }),(p2:Person { surename: $person2 }) MERGE (p1)-[r:"+relation +"]->(p2) RETURN p1.surename, type(r), p2.surename", person1 = person1, person2 = person2, relation = relation)
 
 def getRelation(phrase):
     relation = ""
     lookups = [
         ('cas(?:ou|ado)', "casado"),
         ('não são casados', "divorciado"),
+        ('namora', "namora"),
     ]
 
     for pattern, value in lookups:
@@ -52,7 +52,7 @@ def getRelation(phrase):
 
     return relation
 
-
+    
 def main():
     file = sys.argv[1]
 
@@ -70,7 +70,7 @@ def main():
     phrases = formatText(text)
     p = []
     pM = r"(?:[A-ZÀ-Ü]\w+|[A-ZÀ-Ü]\.|[A-ZÀ-Ü][a-z]\.)"
-    rS = r"(?:casado|casou|divorciado|divorciou|namorado|namorada|esposa|marido|não são casados)"
+    rS = r"(?:casado|casou|divorciado|divorciou|namorado|namorada|esposa|marido|não são casados|namora)"
 
     #Equitecar nomes e relationStatus em cada frase
     for phrase in phrases:
@@ -86,7 +86,8 @@ def main():
             if(re.search(r"(.*?):p", phrase)):
                 result = re.findall(r"{(\w+)}:p",phrase)
                 if(len(result) > 1):
-                    addRelation(session, result[0], result[1], relation)     
+                    addRelation(session, result[0], result[1], relation)
+                    print(f"Pessoa 1: {result[0]} Pessoa 2: {result[1]} Estado: {relation}")   
                 lastPerson = result[len(result) - 1]    
 
 
