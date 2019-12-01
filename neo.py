@@ -36,7 +36,7 @@ def addRelation(driver,person1, person2, relation):
         session.run("MATCH (p1:Person { surename: $person1 }),(p2:Person { surename: $person2 }) MERGE (p1)-[r:"+relation +"]->(p2) RETURN p1.surename, type(r), p2.surename", person1 = person1, person2 = person2, relation = relation)
 
 #clears all data from database
-def cleanTable(driver):
+def clearTable(driver):
     with driver.session() as session:
         session.run("MATCH (n) DETACH DELETE n")
 
@@ -90,7 +90,7 @@ def main():
 
     #Initiate connection and create session
     driver = GraphDatabase.driver(uri="bolt://localhost:7687" , auth=("neo4j", "eheh"))
-    cleanTable(driver)
+    clearTable(driver)
 
 
     text = ""
