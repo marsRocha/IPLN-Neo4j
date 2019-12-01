@@ -75,6 +75,9 @@ def main():
 
     #Equitecar nomes e relationStatus em cada frase
     for phrase in phrases:
+        #text = word_tokenize(phrase,language="portuguese")
+        #tokens = nltk.pos_tag(text)
+        #print(tokens)
         ph = re.sub(r"(?:(o|a|O|A|do|da)) " + f"({pM})", r' {\1}:s {\2}:p', phrase)
         ph = re.sub(f" ({rS})", r'{\1}:r', ph)
         p.append(ph)
