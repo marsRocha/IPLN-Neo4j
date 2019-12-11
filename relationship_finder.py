@@ -89,7 +89,7 @@ def main():
     dop = dict(opts)
 
     #Initiate connection and create session
-    driver = GraphDatabase.driver(uri="bolt://localhost:7687" , auth=("neo4j", "eheh"))
+    driver = GraphDatabase.driver(uri="bolt://localhost:7687" , auth=("neo4j", "eheh")) #colocar username e password utilizado na criaçao da base de dados
     clearTable(driver)
 
 

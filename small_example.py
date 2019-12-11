@@ -9,7 +9,10 @@ def main():
     relation = "Provides"
 
     with driver.session() as session:
-        session.run("CREATE (node1:Warehouse {name: $warehouse})-[r:"+relation+"]->(node2:Store {name: $store})",warehouse=warehouse,store=store,relation=relation)
-        
+        result = session.run("CREATE (node1:Warehouse {name: $warehouse})-[r:"+relation+"]->(node2:Store {name: $store}) Return node1",warehouse=warehouse,store=store,relation=relation)
+        for record in result:
+            n = record["node1"]
+            print(n)
+
 if __name__ == "__main__":
     main()
