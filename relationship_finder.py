@@ -50,8 +50,10 @@ def getRelation(phrase):
         ('namor(?:a|ado|ada)', "namora"),
         ('namor(?:ou|aram)',"exnamorado"),
         ('irmãos', "irmão"),
+        ('irmão', "irmão"),
         ('esposa',"esposa"),
         ('marido',"marido"),
+        ('amig(?:a|o|as|os)', "amigo")
     ]
 
     for pattern, value in lookups:
@@ -89,7 +91,7 @@ def main():
     dop = dict(opts)
 
     #Initiate connection and create session
-    driver = GraphDatabase.driver(uri="bolt://localhost:7687" , auth=("neo4j", "eheh")) #colocar username e password utilizado na criaçao da base de dados
+    driver = GraphDatabase.driver(uri="bolt://localhost:7687" , auth=("neo4j", "eheh"))
     clearTable(driver)
 
 
@@ -108,7 +110,7 @@ def main():
     pM = r"(?:[A-ZÀ-Ü]\w+|[A-ZÀ-Ü]\.|[A-ZÀ-Ü][a-z]\.)"
     d = r"(?:da|do|de|dos|das)"
     nP = f"{pM}(?: {pM}| {d} {pM})*"
-    rS = r"(?:cas(?:ado|ada|ou)|divorci(?:ado|ada|ou|aram)|namor(?:a|ou|aram|ada|ado)|esposa|marido|não são casados|irmãos)"
+    rS = r"(?:cas(?:ado|ada|ou)|divorci(?:ado|ada|ou|aram)|namor(?:a|ou|aram|ada|ado)|esposa|marido|não são casados|irmãos|irmão|amig(?:a|o|as|os))"
 
     #Tags names and relationships on each phrase
     for phrase in phrases:
@@ -138,3 +140,4 @@ def main():
 
 if __name__ == "__main__":
     main()  
+
